@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  zone: MyString
+  meter_number: MyString
+  meter_measurement: 1
+  meter_serie: MyString
+  meter_model: MyString
+  description: MyString
+  observation: MyString
+
+two:
+  zone: MyString
+  meter_number: MyString
+  meter_measurement: 1
+  meter_serie: MyString
+  meter_model: MyString
+  description: MyString
+  observation: MyString
