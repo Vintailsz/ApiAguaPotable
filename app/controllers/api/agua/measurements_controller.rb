@@ -13,9 +13,7 @@ module Api
             end
 
             def create
-                Rails.logger.debug params.inspect
-
-                @measurement = Measurement.new(measurement_params)
+                @measurement = Measurement.new(measurement_params.except(:meter_image_ids))
                 if @measurement.save
                     render json: MeasurementBlueprint.render(@measurement)
                 else
@@ -29,11 +27,17 @@ module Api
 
                 if @measurement.update(measurement_params.except(:meter_images, :meter_image_ids))
 
-                    if measurement_params[:meter_image_ids].present?
-                        ids = measurement_params[:meter_image_ids].map(&:to_s)
-
-                        @measurement.meter_images.each do |image|
-                            image.purge unless ids.include?(image.id.to_s)
+                    if measurement_params.key?(:meter_image_ids)
+                        ids = Array(measurement_params[:meter_image_ids])
+                                .reject(&:blank?)
+                                .map(&:to_s)
+                        
+                        if ids.empty?
+                            @measurement.meter_images.purge
+                        else
+                            @measurement.meter_images.each do |image|
+                                image.purge unless ids.include?(image.id.to_s)
+                            end
                         end
                     end
 

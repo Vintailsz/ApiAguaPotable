@@ -38,6 +38,7 @@ gem 'jwt', '~> 3.1', '>= 3.1.2'
 
 gem 'rack-cors', '~> 3.0'
 
+gem 'fiddle', '~> 1.1', '>= 1.1.8'
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 # gem "rack-cors"
 
