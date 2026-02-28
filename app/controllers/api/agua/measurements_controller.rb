@@ -24,17 +24,18 @@ module Api
             end
 
             def update
-                if @measurement.update(measurement_params.except(:meter_images, :existing_images))
-                    if measurement_params[:existing_images]
-                        keep_urls = measurement_params[:existing_images]
+                if @measurement.update(measurement_params.except(:meter_images, :meter_image_ids))
+
+                    if measurement_params[:meter_image_ids]
+                        keep_ids = measurement_params[:meter_image_ids].map(&:to_i)
 
                         @measurement.meter_images.each do |img|
-                            url = Rails.application.routes.url_helpers.url_for(img)
-
-                            unless keep_urls.include?(url)
-                            img.purge
+                            unless keep_ids.include?(img.id)
+                                img.purge
                             end
                         end
+                    else
+                        @measurement.meter_images.each(&:purge)
                     end
                     
                     if measurement_params[:meter_images]

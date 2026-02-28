@@ -15,6 +15,6 @@ class MeasurementBlueprint < Blueprinter::Base
   end
 
   field :meter_image_ids do |measurement|
-    measurement.meter_image_ids.map(&:id)
+    measurement.meter_images.map(&:id)
   end
 end
