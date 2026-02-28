@@ -1,4 +1,4 @@
-class MeasurementBlueprint < Blueprinter::Base
+class MeasurementBlueprint < Blueprinter::Base  
   identifier :id
 
   fields :zone,
@@ -8,13 +8,15 @@ class MeasurementBlueprint < Blueprinter::Base
          :meter_model,
          :description
 
-  field :meter_images_url do |measurement|
+  field :meter_images do |measurement|
     measurement.meter_images.map do |img|
-      Rails.application.routes.url_helpers.url_for(img)
+      {
+        id: img.id,
+        url: Rails.application.routes.url_helpers.rails_blob_url(
+          img,
+          host: Rails.application.routes.default_url_options[:host]
+        )
+      }
     end
-  end
-
-  field :meter_image_ids do |measurement|
-    measurement.meter_images.map(&:id)
   end
 end

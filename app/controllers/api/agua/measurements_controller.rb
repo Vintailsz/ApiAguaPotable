@@ -24,21 +24,20 @@ module Api
             end
 
             def update
+                Rails.logger.debug "PARAMS RECIBIDOS:"
+                Rails.logger.debug params.inspect
+
                 if @measurement.update(measurement_params.except(:meter_images, :meter_image_ids))
 
-                    if measurement_params[:meter_image_ids]
-                        keep_ids = measurement_params[:meter_image_ids].map(&:to_i)
+                    if measurement_params[:meter_image_ids].present?
+                        ids = measurement_params[:meter_image_ids].map(&:to_s)
 
-                        @measurement.meter_images.each do |img|
-                            unless keep_ids.include?(img.id)
-                                img.purge
-                            end
+                        @measurement.meter_images.each do |image|
+                            image.purge unless ids.include?(image.id.to_s)
                         end
-                    else
-                        @measurement.meter_images.each(&:purge)
                     end
-                    
-                    if measurement_params[:meter_images]
+
+                    if measurement_params[:meter_images].present?
                         @measurement.meter_images.attach(measurement_params[:meter_images])
                     end
 
@@ -69,8 +68,7 @@ module Api
                         :meter_model, 
                         :description, 
                         meter_images: [],
-                        meter_image_ids: [],
-                        existing_images: []
+                        meter_image_ids: []
                     ) 
                 end
         end
