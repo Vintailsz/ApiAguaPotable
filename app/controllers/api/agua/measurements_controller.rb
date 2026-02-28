@@ -24,7 +24,23 @@ module Api
             end
 
             def update
-                if @measurement.update(measurement_params)
+                if @measurement.update(measurement_params.except(:meter_images, :existing_images))
+                    if measurement_params[:existing_images]
+                        keep_urls = measurement_params[:existing_images]
+
+                        @measurement.meter_images.each do |img|
+                            url = Rails.application.routes.url_helpers.url_for(img)
+
+                            unless keep_urls.include?(url)
+                            img.purge
+                            end
+                        end
+                    end
+                    
+                    if measurement_params[:meter_images]
+                        @measurement.meter_images.attach(measurement_params[:meter_images])
+                    end
+
                     render json: MeasurementBlueprint.render(@measurement)
                 else
                     render json: @measurement.errors, status: :unprocessable_entity
@@ -51,7 +67,9 @@ module Api
                         :meter_serie, 
                         :meter_model, 
                         :description, 
-                        meter_images: []
+                        meter_images: [],
+                        meter_image_ids: [],
+                        existing_images: []
                     ) 
                 end
         end

@@ -13,4 +13,8 @@ class MeasurementBlueprint < Blueprinter::Base
       Rails.application.routes.url_helpers.url_for(img)
     end
   end
+
+  field :meter_image_ids do |measurement|
+    measurement.meter_image_ids.map(&:id)
+  end
 end

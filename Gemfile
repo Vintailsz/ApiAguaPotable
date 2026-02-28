@@ -36,8 +36,6 @@ gem 'blueprinter', '~> 1.2', '>= 1.2.1'
 
 gem 'jwt', '~> 3.1', '>= 3.1.2'
 
-gem 'bcrypt', '~> 3.1.7'
-
 gem 'rack-cors', '~> 3.0'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
